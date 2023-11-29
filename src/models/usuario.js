@@ -14,7 +14,7 @@ module.exports = (sequelize) => {
         },
         segundoNombre: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         apellido: {
             type: DataTypes.STRING,
@@ -30,11 +30,11 @@ module.exports = (sequelize) => {
         },
         vialidad: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         exterior: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         interior: {
             type: DataTypes.STRING,
@@ -42,7 +42,7 @@ module.exports = (sequelize) => {
         },
         correo: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
             validate: {
                 isEmail: true,
             },
