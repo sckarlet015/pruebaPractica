@@ -1,84 +1,109 @@
-const { Usuario } = require("../db");
-const { Op } = require('sequelize');
+const { Usuario, Contacto } = require("../db");
+const {
+    crearContrasenaHash,
+    verificarContrasenaHash,
+    verificarDuplicado,
+    verificarContrasenaValida,
+} = require("../actions/usuarioActions");
 
-const create = async (data) => {
-    const { correo, celular } = data;
-
+async function register(usuario) {
     try {
-        const existingUser = await Usuario.findOne({
+        let duplicado = await verificarDuplicado(usuario.correo);
+        if (duplicado) {
+            throw new Error("Ya existe un usuario con ese correo");
+        }
+        let contrasenaValida = verificarContrasenaValida(usuario.contrasena);
+        if (!contrasenaValida) {
+            throw new Error("Contraseña inválida");
+        }
+        let nuevoUsuario = {
+            nombre: usuario.nombre,
+            apellidos: usuario.apellidos,
+            correo: usuario.correo,
+            rol: usuario.rol,
+        };
+
+        nuevoUsuario.contrasena = await crearContrasenaHash(usuario.contrasena);
+
+        const usuarioCreado = await Usuario.create(nuevoUsuario);
+
+        if (nuevoUsuario.nombre.length === 0) {
+            throw new Error("Ups, hubo un error");
+        }
+
+        const respuestaUsuario = {
+            id: usuarioCreado.id,
+            nombre: usuarioCreado.nombre,
+            apellido: usuarioCreado.apellido,
+            correo: usuarioCreado.correo,
+            celular: usuarioCreado.celular,
+            telefono: usuarioCreado.telefono,
+            foto: usuarioCreado.foto
+        };
+
+        return respuestaUsuario;
+    } catch (error) {
+        console.error(error.message);
+        throw error;
+    }
+}
+
+async function sesion(credencial) {
+    try {
+        let usuario = await Usuario.findOne({
             where: {
-                [Op.or]: [{ correo: correo }, { celular: celular }]
+                correo: credencial.correo,
+            },
+        });
+        if (!usuario) {
+            throw new Error("Usuario no encontrado");
+        }
+
+        let contrasenaHashBool = await verificarContrasenaHash(credencial.contrasena, usuario.contrasena);
+        if (contrasenaHashBool) {
+            const respuestaUsuario = {
+                id: usuario.id,
+                nombre: usuario.nombre,
+                apellido: usuario.apellido,
+                correo: usuario.correo,
+                celular: usuario.celular,
+                telefono: usuario.telefono,
+                foto: usuario.foto
+            };
+
+            return respuestaUsuario;
+        } else {
+            throw new Error("Contraseña incorrecta");
+        }
+    } catch (error) {
+        console.error(error.message);
+        throw error;
+    }
+}
+
+const editUser = async (id, data) => {
+    try {
+        const { contrasena, correo, id: userId, ...actualizacionPermitida } = data;
+
+        await Usuario.update(actualizacionPermitida, {
+            where: {
+                id: id
             }
         });
 
-        if (existingUser) {
-            throw new Error("Ya existe un usuario con el mismo correo o celular");
-        }
+        const newUsuario = await Usuario.findByPk(id, {
+            attributes: { exclude: ['contrasena'] }
+        });
 
-        const nuevoUsuario = await Usuario.create(data);
-
-        return nuevoUsuario;
+        return newUsuario;
     } catch (error) {
-        console.log(error.message);
+        console.error(error.message);
         throw error;
     }
 };
 
-const getAllContacts = async() => {
-    try {
-        const contacts = await Usuario.findAll({
-            attributes: ['id', 'nombre', 'apellido', 'alias', 'celular', 'correo', 'foto']
-        });
-        return contacts;
-    } catch (error) {
-        console.log(error.message);
-        throw error;
-    }
-}
-
-const contacDetails = async(id) => {
-    try {
-        const contact = await Usuario.findByPk(id);
-        return contact;
-    } catch (error) {
-        console.log(error.message);
-        throw error;
-    }
-}
-
-const editContact = async(id, data) => {
-    try {
-        await Usuario.update(data, {
-            where: {
-                id: id
-            }
-        });
-        const newContac = await Usuario.findByPk(id)
-        return newContac;
-    } catch (error) {
-        console.log(error.message);
-        throw error;
-    }
-}
-
-const deleteContact = async(id) => {
-    try {
-        await Usuario.destroy({
-            where: {
-                id: id
-            }
-        });
-        return true;
-    } catch (error) {
-        console.log(error.message);
-        throw error;
-    }
-}
-
 module.exports = {
-    create,
-    getAllContacts,
-    contacDetails,
-    editContact,
-    deleteContact
+    register,
+    sesion,
+    editUser
 };

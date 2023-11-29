@@ -12,31 +12,7 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: false,
         },
-        segundoNombre: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
         apellido: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        segundoApellido: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        alias: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        vialidad: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        exterior: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        interior: {
             type: DataTypes.STRING,
             allowNull: true,
         },
@@ -47,40 +23,15 @@ module.exports = (sequelize) => {
                 isEmail: true,
             },
         },
+        contrasena: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         celular: {
             type: DataTypes.STRING,
             allowNull: true,
         },
-        local: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        activo: {
-            type: DataTypes.BOOLEAN,
-            defaultValue: true,
-            allowNull: true,
-        },
-        fechaNacimiento: {
-            type: DataTypes.DATEONLY,
-            allowNull: true,
-        },
-        genero: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        sitioWeb: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        facebook: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        linkedin: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
-        cargo: {
+        telefono: {
             type: DataTypes.STRING,
             allowNull: true,
         },
@@ -89,8 +40,6 @@ module.exports = (sequelize) => {
             allowNull: true,
         },
     }, {
-        timestamps: true, 
-        createdAt: 'fechaCreacion', 
-        updatedAt: 'fechaModificacion',
+        timestamps: false
     });
 };

@@ -1,15 +1,15 @@
 const { Router } = require('express');
 const express = require("express");
 
-const {newContact, allContacts, contacDetailsId, updateContatc, destroyContac} = require("../handlers/usuarioHandler")
+const conatcRouter = require("./contactoRoute")
+const usuarioRouter = require("./usuarioRoute")
+const mixRouter = require("./mixRouter")
 
 const router = Router();
 router.use(express.json());
 
-router.post('/newContact', newContact);
-router.get('/allContacts', allContacts);
-router.get('/contacDetails/:id', contacDetailsId);
-router.put('/updateContac/:id', updateContatc);
-router.delete('/destroyContac/:id', destroyContac);
+router.use("/contacto", conatcRouter);
+router.use("/usuario", usuarioRouter);
+router.use("/mix", mixRouter);
 
 module.exports = router;
