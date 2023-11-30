@@ -3,14 +3,14 @@ const { Op } = require('sequelize');
 
 const create = async (data) => {
     const { usuarioId } = data;
-
+    console.log(data);
     try {
         const usuario = await Usuario.findByPk(usuarioId, {
             include: Contacto,
         });
 
         const contactoExistente = usuario.Contactos.find(
-            (contacto) => contacto.correo === correo || contacto.celular === celular
+            (contacto) => contacto.celular === data.celular || contacto.correo === data.correo
         );
 
         if (contactoExistente) {
@@ -34,7 +34,7 @@ const create = async (data) => {
             await nuevoContacto.addOrganizacion(nuevaOrganizacion);
         }
 
-        if (data.categoria !== undefined) {
+        if (data.categoria !== undefined || data.categoria !== null) {
             const categoriaExistente = await Categoria.findOne({
                 where: { nombre: { [Op.iLike]: `%${data.categoria}%` } },
             });

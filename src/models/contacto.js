@@ -28,6 +28,10 @@ module.exports = (sequelize) => {
             type: DataTypes.STRING,
             allowNull: true,
         },
+         relacion: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
         vialidad: {
             type: DataTypes.STRING,
             allowNull: true,
@@ -42,10 +46,7 @@ module.exports = (sequelize) => {
         },
         correo: {
             type: DataTypes.STRING,
-            allowNull: false,
-            validate: {
-                isEmail: true,
-            },
+            allowNull: true,
         },
         celular: {
             type: DataTypes.STRING,
@@ -64,10 +65,6 @@ module.exports = (sequelize) => {
             type: DataTypes.DATEONLY,
             allowNull: true,
         },
-        genero: {
-            type: DataTypes.STRING,
-            allowNull: true,
-        },
         sitioWeb: {
             type: DataTypes.STRING,
             allowNull: true,
@@ -81,6 +78,10 @@ module.exports = (sequelize) => {
             allowNull: true,
         },
         cargo: {
+            type: DataTypes.STRING,
+            allowNull: true,
+        },
+        genero: {
             type: DataTypes.STRING,
             allowNull: true,
         },
