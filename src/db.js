@@ -4,7 +4,7 @@ const fs = require('fs');
 const path = require('path');
 const { DB_URL } = process.env;
 
-const sequelize = new Sequelize(DB_URL,
+const sequelize = new Sequelize("postgres://agenda_e5su_user:IaYhXvVi3ztXn70eFWKOg9BJb6irqbxt@dpg-clkgdr4jtl8s73e4hh40-a/agenda_e5su",
    {
       logging: false,
       native: false,
